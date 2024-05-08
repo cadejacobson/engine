@@ -7,6 +7,9 @@ using namespace std;
 
 int getRandom(int min, int max);
 
+int windowHeight = 600;
+int windowLength = 800;
+
 class Boundary {
 public:
     int x1;
@@ -17,19 +20,76 @@ public:
 
 class Player {
 public:
-    int x;
-    int y;
-    int speed;
+    double x;
+    double y;
+    double speed;
+    double dx;
+    double dy;
+    double max_dx;
+    double max_dy;
 
-    Player(int given_x, int given_y, int given_speed = 3){
+    Player(double given_x, double given_y, double given_speed = .20){
         x = given_x;
         y = given_y;
         speed = given_speed;
+        dx = 0;
+        dy = 0;
+        max_dx = .1;
+        max_dy = .1;
     };
-};
 
-int windowHeight = 600;
-int windowLength = 800;
+    void handleEvent(const SDL_Event& event) {
+        if (event.type == SDL_KEYDOWN) {
+            switch (event.key.keysym.sym) {
+                case SDLK_UP:
+                    dy -= speed;
+                    if(abs(dy) > max_dy)
+                        dy = -max_dy;
+                    break;
+                case SDLK_DOWN:
+                    dy += speed;
+                    if(abs(dy) > max_dy)
+                        dy = max_dy;
+                    break;
+                case SDLK_LEFT:
+                    dx -= speed;
+                    if(abs(dx) > max_dx)
+                        dx = -max_dx;
+                    break;
+                case SDLK_RIGHT:
+                    dx += speed;
+                    if(abs(dx) > max_dx)
+                        dx = max_dx;
+                    break;
+            }
+        } else if (event.type == SDL_KEYUP) {
+            switch (event.key.keysym.sym) {
+                case SDLK_UP:
+                    dy = 0;
+                    break;
+                case SDLK_DOWN:
+                    dy = 0;
+                    break;
+                case SDLK_LEFT:
+                    dx = 0;
+                    break;
+                case SDLK_RIGHT:
+                    dx = 0;
+                    break;
+            }
+        }
+    }
+
+    void move() {
+        x += dx;
+        y += dy;
+
+        if (x < 0) x = 0;
+        if (x >= windowLength) x = windowLength - 1;
+        if (y < 0) y = 0;
+        if (y >= windowHeight) y = windowHeight - 1;
+    }
+};
 
 int main() {
     srand(time(nullptr));
@@ -37,9 +97,9 @@ int main() {
 
     for (int i = 0; i < 5; ++i) {
         auto boundary = Boundary{getRandom(0, windowLength),
-                                     getRandom(0, windowHeight),
-                                     getRandom(0, windowLength),
-                                     getRandom(0, windowHeight)};
+                                 getRandom(0, windowHeight),
+                                 getRandom(0, windowLength),
+                                 getRandom(0, windowHeight)};
         boundaries.push_back(boundary);
     }
 
@@ -70,13 +130,18 @@ int main() {
     // Main loop
     bool quit = false;
     SDL_Event event;
+
     while (!quit) {
         // Handle events
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
+            player.handleEvent(event);
         }
+
+        // Move the player
+        player.move();
 
         // Render
         // You can add your rendering code here
@@ -96,7 +161,7 @@ int main() {
         SDL_RenderPresent(renderer);
 
         // Delay to control frame rate
-        SDL_Delay(16);
+        //SDL_Delay(3);
     }
 
     // Cleanup
