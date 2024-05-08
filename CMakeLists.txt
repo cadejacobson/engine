@@ -8,7 +8,9 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 # Add your source files
-add_executable(engine main.cpp)
+add_executable(engine main.cpp
+        player.h
+)
 
 # Link SDL2 library
 target_link_libraries(engine ${SDL2_LIBRARIES})
