@@ -15,6 +15,19 @@ public:
     int y2;
 };
 
+class Player {
+public:
+    int x;
+    int y;
+    int speed;
+
+    Player(int given_x, int given_y, int given_speed = 3){
+        x = given_x;
+        y = given_y;
+        speed = given_speed;
+    };
+};
+
 int windowHeight = 600;
 int windowLength = 800;
 
@@ -23,12 +36,14 @@ int main() {
     vector<Boundary> boundaries;
 
     for (int i = 0; i < 5; ++i) {
-        Boundary boundary = Boundary{getRandom(0, windowLength),
+        auto boundary = Boundary{getRandom(0, windowLength),
                                      getRandom(0, windowHeight),
                                      getRandom(0, windowLength),
                                      getRandom(0, windowHeight)};
         boundaries.push_back(boundary);
     }
+
+    Player player(5, 5);
 
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -70,12 +85,12 @@ int main() {
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        // Draw a dot at coordinates (100, 100) with a radius of 10
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // Set color to white
 
         for(auto boundary: boundaries){
             SDL_RenderDrawLine(renderer, boundary.x1, boundary.y1, boundary.x2, boundary.y2);
         }
+
+        SDL_RenderDrawPoint(renderer, player.x, player.y);
 
         // Update the screen
         SDL_RenderPresent(renderer);
