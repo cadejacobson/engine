@@ -1,8 +1,10 @@
 #include <SDL2/SDL.h>
 #include "player.h"
+#include "boundary.h"
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -11,16 +13,12 @@ int getRandom(int min, int max);
 int windowHeight = 600;
 int windowLength = 800;
 
-class Boundary {
-public:
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-};
 
 int main() {
     srand(time(nullptr));
+
+    vector<vector<int>> lines;
+
     vector<Boundary> boundaries;
 
     for (int i = 0; i < 5; ++i) {
@@ -59,6 +57,8 @@ int main() {
     bool quit = false;
     SDL_Event event;
 
+    int test = 1;
+    //while(test != 0){
     while (!quit) {
         // Handle events
         while (SDL_PollEvent(&event)) {
@@ -79,17 +79,24 @@ int main() {
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-        for(auto boundary: boundaries){
+        for(auto boundary: boundaries) {
             SDL_RenderDrawLine(renderer, boundary.x1, boundary.y1, boundary.x2, boundary.y2);
         }
 
+        lines = player.look(boundaries);
+
+        //cout << lines.size() << endl;
+        for(auto line: lines){
+            SDL_RenderDrawLine(renderer, line[0], line[1], line[2], line[3]);
+            //cout << line[0] << " " << line[1] << " " << line[2] << " " << line[3] << endl;
+        }
         SDL_RenderDrawPoint(renderer, player.x, player.y);
 
         // Update the screen
         SDL_RenderPresent(renderer);
 
         // Delay to control frame rate
-        //SDL_Delay(3);
+        //test--;
     }
 
     // Cleanup

@@ -10,6 +10,9 @@ include_directories(${SDL2_INCLUDE_DIRS})
 # Add your source files
 add_executable(engine main.cpp
         player.h
+        boundary.h
+        ray.h
+        point.h
 )
 
 # Link SDL2 library
