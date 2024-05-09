@@ -9,8 +9,10 @@ in learning how the computer creates graphics at a very low level
 to the point that this game can be run on every device known to man.
 
 Obviously, there is no way to build something like Unity in my spare time,
-but a small DOOM engine? Perfectly sized project.
-
+but a small DOOM engine? Perfectly sized project. The choice of C is due
+in large part to my operating systems class, where we built a shell, a 
+memory manager, and a file system all in C. I appreciate the language
+for how much control it gives, and how much mastery you need to use it.
 
 ### Name
 For those of you who spend your time doing more productive things than
